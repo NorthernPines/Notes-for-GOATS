@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-// const api = require('./public/assets/js/index.js');
 const uuid = require("./helpers/uuid");
+
 const PORT = 3001;
 const db = require('./db/db');
 
@@ -17,13 +17,9 @@ app.use(express.static('public'));
 
 // loading the notes page
 app.get('/notes', (req, res) =>
-res.sendFile(path.join(__dirname, '/public/notes.html'))
+    res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-// loading the home page
-app.get('*', (req, res) =>
-    res.sendFile(path.join(__dirname, '/public/index.html'))
-);
 
 // for adding notes to the list
 app.post('/api/notes', (req, res) => {
@@ -58,7 +54,7 @@ app.post('/api/notes', (req, res) => {
                 );
             }
         });
-        
+
         const response = {
             status: 'success',
             body: newNote,
@@ -99,9 +95,9 @@ app.delete('/api/notes/:id', (req, res) => {
                     './db/db.json',
                     JSON.stringify(db, null, 4),
                     (writeErr) =>
-                    writeErr
-                    ? console.error(writeErr)
-                    : console.info('Successfully updated notes!')
+                        writeErr
+                            ? console.error(writeErr)
+                            : console.info('Successfully updated notes!')
                 );
                 res.status(200).json(currentId);
                 return;
@@ -112,6 +108,11 @@ app.delete('/api/notes/:id', (req, res) => {
         res.status(400).send('Review ID not provided');
     }
 })
+
+// loading the home page
+app.get('*', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/index.html'))
+);
 
 // listening on the server
 app.listen(PORT, () =>
