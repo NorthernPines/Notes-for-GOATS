@@ -15,11 +15,17 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
+// loading the notes page
 app.get('/notes', (req, res) =>
-    res.sendFile(path.join(__dirname, '/public/notes.html'))
+res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
+// loading the home page
+app.get('*', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/index.html'))
+);
 
+// for adding notes to the list
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
     if (title && text) {
@@ -52,7 +58,7 @@ app.post('/api/notes', (req, res) => {
                 );
             }
         });
-
+        
         const response = {
             status: 'success',
             body: newNote,
@@ -65,6 +71,7 @@ app.post('/api/notes', (req, res) => {
     }
 })
 
+// for displaying the notes
 app.get('/api/notes', (req, res) => {
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
@@ -77,6 +84,7 @@ app.get('/api/notes', (req, res) => {
     })
 })
 
+// to delete a note with the delete button
 app.delete('/api/notes/:id', (req, res) => {
     if (req.params.id) {
         console.log('Request received to delete note');
@@ -105,10 +113,7 @@ app.delete('/api/notes/:id', (req, res) => {
     }
 })
 
-app.get('*', (req, res) =>
-    res.sendFile(path.join(__dirname, '/public/index.html'))
-);
-
+// listening on the server
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
